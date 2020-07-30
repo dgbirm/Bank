@@ -9,7 +9,7 @@ public class Account implements Serializable {
 
 	private static final long serialVersionUID = -776361010511187135L;
 	
-	private final int acctID;
+	private final Integer acctID;
 	private Set<Integer> acctCustomerIDs;
 	private String acctPass;
 	private double acctBalance=0.0;
@@ -17,13 +17,13 @@ public class Account implements Serializable {
 	
 	//Constructors
 	/**
-	 * @param acctID: Unique id of the account
-	 * @param acctCustomerIDs: IDs of customers associated with the account
-	 * @param acctPass: Password for the account
-	 * @param acctBalance: Balance for the account. If not given, defaults to 0
-	 * @param acctType: type of the account (checking or savings)
+	 * @param acctID Unique id of the account
+	 * @param acctCustomerIDs IDs of customers associated with the account
+	 * @param acctPass Password for the account
+	 * @param acctBalance Balance for the account. If not given, defaults to 0
+	 * @param acctType type of the account (checking or savings)
 	 */
-	public Account(int acctID, Set<Integer> acctCustomerIDs, String acctPass,
+	public Account(Integer acctID, Set<Integer> acctCustomerIDs, String acctPass,
 			Enum<AccountType> acctType, double acctBalance) {
 		this.acctID = acctID;
 		this.acctCustomerIDs = acctCustomerIDs;
@@ -32,7 +32,7 @@ public class Account implements Serializable {
 		this.acctBalance = acctBalance;
 	}
 	
-	public Account(int acctID, Set<Integer> acctCustomerIDs, String acctPass,
+	public Account(Integer acctID, Set<Integer> acctCustomerIDs, String acctPass,
 			Enum<AccountType> acctType) {
 		this.acctID = acctID;
 		this.acctCustomerIDs = acctCustomerIDs;
@@ -40,7 +40,7 @@ public class Account implements Serializable {
 		this.acctType = acctType;
 	}
 	
-	public Account(int acctID, Set<Integer> acctCustomerIDs, String acctPass) {
+	public Account(Integer acctID, Set<Integer> acctCustomerIDs, String acctPass) {
 		this.acctID = acctID;
 		this.acctCustomerIDs = acctCustomerIDs;
 		this.acctPass = acctPass;
@@ -123,7 +123,7 @@ public class Account implements Serializable {
 	/**
 	 * @return the acctID
 	 */
-	public synchronized int getAcctID() {
+	public synchronized Integer getAcctID() {
 		return acctID;
 	}
 	

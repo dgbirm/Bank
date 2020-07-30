@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020 as part of Bank, All rights reserved.
  * @author Dan Birmingham. Please reach out to dgbirm@gmail.com
- * Date generated: Jul 29, 2020
+ * Date generated: Jul 30, 2020
  * @version jdk-14
  */
 
@@ -22,7 +22,9 @@ public interface CustomerDAO {
 	 * @param id the id
 	 * @return the customer
 	 */
-	public Customer getCustomer(int id);
+	public Customer getCustomer(Integer id);
+	
+	public Customer getCustomer(String customerName);
 	
 	/**
 	 * Gets the all customers.
@@ -30,6 +32,14 @@ public interface CustomerDAO {
 	 * @return the all customers
 	 */
 	public ResultSet getAllCustomers();
+	
+	/**
+	 * Adds the customer.
+	 *
+	 * @param Customer the customer
+	 * @return true, if successful
+	 */
+	public boolean addCustomer(Customer Customer);
 	
 	/**
 	 * Update customer.

@@ -16,6 +16,15 @@ import java.util.Map;
  */
 public class DollarsBankApplication {
 	
-	private static Map<Integer, String> loginCredenitals = new HashMap<>();
+	private static Map<Integer, Integer> loginCredenitals = new HashMap<>();
 
+	public static synchronized Integer getHashedPw(Integer id) {
+		return loginCredenitals.get(id);
+	}
+
+	public static synchronized void addLoginCredenitals(Integer id, String pw) {
+		loginCredenitals.put(id, pw.hashCode());
+	}
+	
+	
 }

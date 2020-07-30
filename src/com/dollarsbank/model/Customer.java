@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Customer implements Serializable {
 
 	private static final long serialVersionUID = 2639005257252900439L;
-	private final int customerID;
+	private final Integer customerID;
 	private String customerName = "";
 	private String address= "";
 	private String city = "";
@@ -28,7 +28,7 @@ public class Customer implements Serializable {
 	 */
 	
 	//Constructors 
-	public Customer(int customerID, String customerName, String address, String city, String country) {
+	public Customer(Integer customerID, String customerName, String address, String city, String country) {
 		this.customerID = customerID;
 		this.customerName = customerName;
 		this.address = address;
@@ -36,21 +36,18 @@ public class Customer implements Serializable {
 		this.country = country;
 	}
 	
-	public Customer(int customerID, String customerName, String address, String city) {
+	public Customer(Integer customerID, String customerName, String address, String city) {
 		this.customerID = customerID;
 		this.customerName = customerName;
 		this.address = address;
 		this.city = city;
 	}
 	
-	public Customer(int customerID, String customerName) {
+	public Customer(Integer customerID, String customerName) {
 		this.customerID = customerID;
 		this.customerName = customerName;
 	}
 	
-	public Customer(int customerID) {
-		this.customerID = customerID;
-	}
 //toString
 	@Override
 	public String toString() {
@@ -117,7 +114,7 @@ public class Customer implements Serializable {
 	/**
 	 * @return the customerID
 	 */
-	public synchronized int getCustomerID() {
+	public synchronized Integer getCustomerID() {
 		return customerID;
 	}
 }
