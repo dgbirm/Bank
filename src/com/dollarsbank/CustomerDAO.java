@@ -24,7 +24,12 @@ public interface CustomerDAO {
 	 */
 	public Customer getCustomer(Integer id);
 	
-	public Customer getCustomer(String customerName);
+	/**
+	 * Gets the most recent customer.
+	 *
+	 * @return the most recent customer added to db
+	 */
+	public Customer getMostRecentCustomer();
 	
 	/**
 	 * Gets the all customers.

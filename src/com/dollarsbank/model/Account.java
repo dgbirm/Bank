@@ -11,8 +11,7 @@ public class Account implements Serializable {
 	
 	private final Integer acctID;
 	private Set<Integer> acctCustomerIDs;
-	private String acctPass;
-	private double acctBalance=0.0;
+	private Double acctBalance=0.0;
 	private Enum<AccountType> acctType = AccountType.CHECKING;
 	
 	//Constructors
@@ -23,27 +22,24 @@ public class Account implements Serializable {
 	 * @param acctBalance Balance for the account. If not given, defaults to 0
 	 * @param acctType type of the account (checking or savings)
 	 */
-	public Account(Integer acctID, Set<Integer> acctCustomerIDs, String acctPass,
-			Enum<AccountType> acctType, double acctBalance) {
+	public Account(Integer acctID, Set<Integer> acctCustomerIDs,
+			Enum<AccountType> acctType, Double acctBalance) {
 		this.acctID = acctID;
 		this.acctCustomerIDs = acctCustomerIDs;
-		this.acctPass = acctPass;
 		this.acctType = acctType;
 		this.acctBalance = acctBalance;
 	}
 	
-	public Account(Integer acctID, Set<Integer> acctCustomerIDs, String acctPass,
+	public Account(Integer acctID, Set<Integer> acctCustomerIDs,
 			Enum<AccountType> acctType) {
 		this.acctID = acctID;
 		this.acctCustomerIDs = acctCustomerIDs;
-		this.acctPass = acctPass;
 		this.acctType = acctType;
 	}
 	
-	public Account(Integer acctID, Set<Integer> acctCustomerIDs, String acctPass) {
+	public Account(Integer acctID, Set<Integer> acctCustomerIDs) {
 		this.acctID = acctID;
 		this.acctCustomerIDs = acctCustomerIDs;
-		this.acctPass = acctPass;
 	}
 
 	
@@ -53,8 +49,8 @@ public class Account implements Serializable {
 	public String toString() {
 		final int maxLen = 5;
 		return "Account [acctID=" + acctID + ", acctCustomerIDs="
-				+ (acctCustomerIDs != null ? toString(acctCustomerIDs, maxLen) : null) + ", acctPass=" + acctPass
-				+ ", acctBalance=" + acctBalance + ", acctType=" + acctType + "]";
+				+ (acctCustomerIDs != null ? toString(acctCustomerIDs, maxLen) : null)
+				+ ", acctBalance=" + acctBalance + ", acctType=" + acctType.toString() + "]";
 	}
 
 	private String toString(Collection<?> collection, int maxLen) {
@@ -79,30 +75,16 @@ public class Account implements Serializable {
 	}
 
 	/**
-	 * @return the acctPass
-	 */
-	public synchronized String getAcctPass() {
-		return acctPass;
-	}
-
-	/**
-	 * @param acctPass the acctPass to set
-	 */
-	public synchronized void setAcctPass(String acctPass) {
-		this.acctPass = acctPass;
-	}
-
-	/**
 	 * @return the acctBalance
 	 */
-	public synchronized double getAcctBalance() {
+	public synchronized Double getAcctBalance() {
 		return acctBalance;
 	}
 
 	/**
 	 * @param acctBalance the acctBalance to set
 	 */
-	public synchronized void setAcctBalance(double acctBalance) {
+	public synchronized void setAcctBalance(Double acctBalance) {
 		this.acctBalance = acctBalance;
 	}
 

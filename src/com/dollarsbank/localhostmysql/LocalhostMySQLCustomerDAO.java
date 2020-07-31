@@ -47,12 +47,12 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 		}
 		return c;
 	}
-	
+
 	@Override
-	public Customer getCustomer(String customerName) {
+	public Customer getMostRecentCustomer() {
 		Customer c = null;
 		try {
-			rs= stmt.executeQuery("SELECT * FROM customer WHERE custName=" + customerName);
+			rs= stmt.executeQuery("SELECT * FROM customer WHERE idCustomer=MAX(idCustomer)");
 			rs.first();
 			c = new Customer(rs.getInt("idCustomer"),
 					 rs.getString("custName"),
@@ -87,7 +87,7 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 			pstmt.setString(2, Customer.getAddress());
 			pstmt.setString(3, Customer.getCity());
 			pstmt.setString(4, Customer.getCountry());
-			pstmt.execute();
+			return pstmt.execute();
 		} catch (SQLException e) {
 			System.out.println("Issue adding customer");
 			e.printStackTrace();

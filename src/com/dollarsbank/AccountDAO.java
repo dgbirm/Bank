@@ -13,6 +13,9 @@ import com.dollarsbank.model.Account;
  */
 public interface AccountDAO {
 	public Account getAccount();
+	public boolean addAccount(Account Account);
+	public boolean addCustomer_Account(Integer customerID, Integer acctID);
+	public Account getMostRecentAccount();
 	public boolean updateAccount(Account Account);
-	public void deleteAccount(Account Account);
+	public void deleteAccount(Integer acctID);
 }
