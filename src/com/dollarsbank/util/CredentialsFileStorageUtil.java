@@ -13,7 +13,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Map;
 
 public class CredentialsFileStorageUtil {
 
@@ -21,7 +20,7 @@ public class CredentialsFileStorageUtil {
 	///////// File Streaming ////////////////
 	/////////////////////////////////////////
 
-	public static synchronized void writeStateToFile(Map<Integer, Integer> loginCredentials) {
+	public static synchronized void writeStateToFile(HashMap<Integer, Integer> loginCredentials) {
 		// Prepare output file
 		File outFile = new File(Paths.get("loginCredentials.txt").toAbsolutePath().toString());
 
@@ -50,21 +49,20 @@ public class CredentialsFileStorageUtil {
 	 * @return the map of login credentials
 	 */
 	@SuppressWarnings("unchecked")
-	public static Map<Integer, Integer> readStateFromFile() {
-
-		Map<Integer,Integer> loginCredentials = new HashMap<>();
+	public static HashMap<Integer, Integer> readStateFromFile() {
+		HashMap<Integer, Integer> loginCredentials = new HashMap<>();
 		File inFile = new File(Paths.get("loginCredentials.txt").toAbsolutePath().toString());
 		if(inFile.exists()) {
 			try {
 				FileInputStream fis = new FileInputStream(inFile);
 				ObjectInputStream ois = new ObjectInputStream(fis);
 
-				loginCredentials = (HashMap<Integer, Integer>) ois.readObject();
+				loginCredentials =(HashMap<Integer, Integer>)ois.readObject();
 
 				ois.close();
 				fis.close();
 			} catch (Exception e) {
-				System.out.println("There was an error importing the EMS state:");
+				System.out.println("There was an error importing the login crendentials:");
 				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}

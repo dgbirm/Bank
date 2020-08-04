@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 import com.dollarsbank.AccountDAO;
 import com.dollarsbank.CustomerDAO;
 import com.dollarsbank.DAOFactory;
@@ -20,7 +19,7 @@ import com.dollarsbank.model.Transaction;
 
 public class ConsoleGuiUtil {
 
-	//Istantiate DAOs
+	//Instantiate DAOs
 	private static CustomerDAO cDAO = DAOFactory
 			.getDAOFactory(DAOFactory.LOCALHOST_MYSQL).getCustomerDAO();
 	private static AccountDAO aDAO = DAOFactory
@@ -151,13 +150,17 @@ public class ConsoleGuiUtil {
 		
 		for (int i = 0; i < 3; i++) {
 			System.out.println("Please enter your Customer ID");
-			customerID = Integer.parseInt(input.nextLine());
-			System.out.println("Please enter your password");
-			pw = input.nextLine();
-			if(pw.hashCode() == DollarsBankApplication.getHashedPw(customerID)) {
-				return customerID;
+			try {
+				customerID = Integer.parseInt(input.nextLine());
+				System.out.println("Please enter your password");
+				pw = input.nextLine();
+				if(pw.hashCode() == DollarsBankApplication.getHashedPw(customerID)) {
+					return customerID;
+				}
+				System.out.println("Your ID or password is incorrect. Please try again");
+			} catch (Exception e) {
+				System.out.println("Your ID or password is incorrect. Please try again");
 			}
-			System.out.println("Your ID or password is incorrect. Please try again");
 		}
 		System.out.println("Too many incorrect login attempts. Returning to main menu");
 		return null;
@@ -166,12 +169,13 @@ public class ConsoleGuiUtil {
 	private static boolean isValidPassword(String pw) {
 		// length
 		if (pw.length() < 8) {
+			System.out.println("your password is not long enough");
 			return false;
 		}
 		// use Regex to check other conditions
-		String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
-		Pattern rgx = Pattern.compile(pattern);
-		if (null == rgx.matcher(pw)) {
+		String pattern = "^(?=.*[@#$%^&+=])(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
+		if (!pw.matches(pattern)) {
+			System.out.println("This is not a valid password. Please try again");
 			return false;
 		}
 		return true;
@@ -181,7 +185,7 @@ public class ConsoleGuiUtil {
 	private static void loggedInRunner(Scanner input, Integer customerID) throws InterruptedException {
 		String loggedInput = "";
 		while (true) {
-			if (loggedInput.equals("q")) {
+			if (loggedInput.equals("b")) {
 				break;
 			}
 			System.out.println("\n----- Welcome Back -----");
@@ -245,15 +249,15 @@ public class ConsoleGuiUtil {
 					+ "\n b -> brokerage");
 			//TODO: This would be a little cleaner as a switch
 			accountType = input.nextLine();
-			if (accountType == "c") {
+			if (accountType.equals("c")) {
 				accntType = AccountType.CHECKING;
 				break;
 			}
-			else if (accountType == "s") {
+			else if (accountType.equals("s")) {
 				accntType = AccountType.SAVINGS;
 				break;
 			}
-			else if (accountType == "b") {
+			else if (accountType.equals("b")) {
 				accntType = AccountType.BROKERAGE;
 				break;
 			}
@@ -330,7 +334,7 @@ public class ConsoleGuiUtil {
 		}
 		try {
 			acct = acctList.get(Integer.parseInt(input.nextLine()));
-			System.out.println(String.format("Ok %1$sing with account id %d %n"
+			System.out.println(String.format("Ok %1$sing with account id %2$d %n"
 					+ "How much would you like to %1$s?", transType, acct));
 			depAmount = Double.parseDouble(input.nextLine());
 			
@@ -380,21 +384,22 @@ public class ConsoleGuiUtil {
 			return;
 		}
 		System.out.println("Please select the account of which you'd like a history:\n");
-		for (Integer acctID : acctList) {
-			System.out.println(String.format("%d for account with id %d",
-					acctList.indexOf(acctID), acctID));
-		}
 		try {
+			for (Integer acctID : acctList) {
+				System.out.println(String.format("%d for account with id %d",
+						acctList.indexOf(acctID), acctID));
+			}
 			acct = acctList.get(Integer.parseInt(input.nextLine()));
 			System.out.println(String.format("Ok account id %d selected. %n"
 					+ "How many past transactions would you like to see", acct));
-			numOfTrans = Integer.getInteger(input.nextLine());
-			System.out.println();
+			numOfTrans = Integer.parseInt(input.nextLine());
+			System.out.println(numOfTrans);
 			System.out.println("---TRANSACTION HISTORY---");
 			List<Transaction> th = tDAO.getTransactionHistory(numOfTrans, acct);
 			th.forEach(t -> System.out.println(t));
-		} catch (IndexOutOfBoundsException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
 			System.out.println("You have not given a valid input. Please try again");
 		}
 	}
@@ -427,7 +432,8 @@ public class ConsoleGuiUtil {
 			if (pw.equals(pw2)) {
 				break;
 			} else {
-				System.out.println("Your passwords dont match. Please try again");
+				System.out.println("Your passwords dont match. Please try again"
+						+ "\n-----");
 				pwBad = true;
 			}
 		}

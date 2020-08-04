@@ -30,7 +30,7 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 	public Account getAccount(Integer idAccount) {
 		Account a = null;
 		try {
-			rs= stmt.executeQuery("SELECT * FROM account WHERE idCustomer=" + idAccount.toString());
+			rs= stmt.executeQuery("SELECT * FROM account WHERE idAccount=" + idAccount.toString());
 			rs.first();
 			a = new Account(rs.getInt("idAccount"),
 					new HashSet<Integer>(),
@@ -51,7 +51,8 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 			pstmt = conn.prepareStatement(ps);
 			pstmt.setString(1, Account.getAcctBalance().toString());
 			pstmt.setString(2, Account.getAcctType().name());
-			return pstmt.execute();
+			pstmt.execute();
+			return true;
 		} catch (SQLException e) {
 			System.out.println("Issue adding account");
 			e.printStackTrace();
@@ -66,7 +67,8 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 			pstmt = conn.prepareStatement(ps);
 			pstmt.setString(1, customerID.toString());
 			pstmt.setString(2, acctID.toString());
-			return pstmt.execute();
+			pstmt.execute();
+			return true;
 		} catch (SQLException e) {
 			System.out.println("Issue connecting customer to account");
 			e.printStackTrace();
@@ -79,7 +81,8 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 		Account a = null;
 		
 		try {
-			rs= stmt.executeQuery("SELECT * FROM account WHERE idAccount=MAX(idAccount)");
+			rs= stmt.executeQuery("SELECT * FROM account WHERE idAccount="
+					+ "(SELECT MAX(idAccount) FROM account)");
 			rs.first();
 			a = new Account(rs.getInt("idAccount"),
 					new HashSet<Integer>(),
@@ -107,7 +110,8 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 			pstmt = conn.prepareStatement(ps);
 			pstmt.setString(1, depositAmount.toString());
 			pstmt.setString(2, idAccount.toString());
-			return pstmt.execute();
+			pstmt.execute();
+			return true;
 		} catch (SQLException e) {
 			System.out.println("Issue updateing balance ");
 			e.printStackTrace();

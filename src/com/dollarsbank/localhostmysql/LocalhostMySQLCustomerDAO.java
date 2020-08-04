@@ -54,7 +54,8 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 	public Customer getMostRecentCustomer() {
 		Customer c = null;
 		try {
-			rs= stmt.executeQuery("SELECT * FROM customer WHERE idCustomer=MAX(idCustomer)");
+			rs= stmt.executeQuery("SELECT * FROM customer WHERE idCustomer="
+					+ "(SELECT MAX(idCustomer) FROM customer)");
 			rs.first();
 			c = new Customer(rs.getInt("idCustomer"),
 					 rs.getString("custName"),
@@ -76,7 +77,7 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 			rs = stmt.executeQuery(String.format("SELECT * FROM customer_account WHERE idCustomer=%d", idCustomer));
 			rs.beforeFirst();
 			while(rs.next()) {
-				custAcctIDs.add(rs.getInt("idCustomer"));
+				custAcctIDs.add(rs.getInt("idAccount"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -106,7 +107,8 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 			pstmt.setString(2, Customer.getAddress());
 			pstmt.setString(3, Customer.getCity());
 			pstmt.setString(4, Customer.getCountry());
-			return pstmt.execute();
+			pstmt.execute();
+			return true;
 		} catch (SQLException e) {
 			System.out.println("Issue adding customer");
 			e.printStackTrace();

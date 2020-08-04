@@ -17,7 +17,7 @@ public class Transaction {
 	private Double ammountTransfered;
 	private String destination="";
 	private Integer acctID;
-	private Timestamp ts;
+	private Timestamp ts = Timestamp.valueOf(LocalDateTime.now());;
 	/**
 	 * @param transactionID
 	 * @param ammountTransfered
@@ -40,7 +40,6 @@ public class Transaction {
 		this.ammountTransfered = ammountTransfered;
 		this.destination = destination;
 		this.acctID = acctID;
-		this.ts = Timestamp.valueOf(LocalDateTime.now());
 	}
 	
 
@@ -48,7 +47,6 @@ public class Transaction {
 		this.transactionID = transactionID;
 		this.ammountTransfered = ammountTransfered;
 		this.acctID = acctID;
-		this.ts = Timestamp.valueOf(LocalDateTime.now());
 	}
 
 	//toString

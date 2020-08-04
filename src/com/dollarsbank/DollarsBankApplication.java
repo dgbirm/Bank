@@ -7,8 +7,7 @@
 
 package com.dollarsbank;
 
-import java.util.Map;
-
+import java.util.HashMap;
 import com.dollarsbank.util.*;
 
 /**
@@ -17,7 +16,7 @@ import com.dollarsbank.util.*;
  */
 public class DollarsBankApplication {
 	
-	private static Map<Integer, Integer> loginCredentials;
+	private static HashMap<Integer, Integer> loginCredentials;;
 
 	public static synchronized Integer getHashedPw(Integer id) {
 		return loginCredentials.get(id);
@@ -28,12 +27,14 @@ public class DollarsBankApplication {
 	}
 	public static void main(String[] args) {
 		loginCredentials = CredentialsFileStorageUtil.readStateFromFile();
+		System.out.println("The current loginCredentials: \n" + loginCredentials + "\n");
 		try {
 			ConsoleGuiUtil.mainRunner();
 		} catch (InterruptedException e) {
-			System.out.println("Syncronization failed");
+			System.out.println("Application failed");
 			e.printStackTrace();
+		} finally {
+			CredentialsFileStorageUtil.writeStateToFile(loginCredentials);
 		}
-		CredentialsFileStorageUtil.writeStateToFile(loginCredentials);
 	}
 }

@@ -29,16 +29,19 @@ public class LocalhostMySQLTransactionDAO implements TransactionDAO {
 	@Override
 	public List<Transaction> getTransactionHistory(Integer numOfTrans, Integer idAccount) {
 		List<Transaction> th = new ArrayList<>();
-		int counter = 0;
+		Integer counter = 0;
 		try {
-			rs = stmt.executeQuery(String.format("SELECT * FROM transaction WHERE idAccount=%d"
+			rs = stmt.executeQuery(String.format("SELECT * FROM transaction WHERE idAccount=%d "
 					+ "ORDER BY idTransaction DESC", idAccount));
 			rs.beforeFirst();
+			System.out.println("hi im here");
 			while(rs.next() && counter < numOfTrans) {
+				System.out.println("inside while");
 				th.add(new Transaction(rs.getInt("idTransaction"),
 									   rs.getDouble("amountTransferred"),
 									   rs.getString("destination"),
-									   idAccount));
+									   idAccount,
+									   rs.getTimestamp("transactionTimestamp")));
 				counter++;
 			}
 			return th;
@@ -52,12 +55,16 @@ public class LocalhostMySQLTransactionDAO implements TransactionDAO {
 	@Override
 	public boolean addTransaction(Transaction Transaction) {
 		// TODO Auto-generated method stub
-		String ps = "INSERT INTO transaction (amountTransferred, idAccount) VALUES (?,?)";
+		String ps = "INSERT INTO transaction "
+				+ "(transactionTimestamp, amountTransferred, destination, idAccount) VALUES (?,?,?,?)";
 		try {
 			pstmt = conn.prepareStatement(ps);
-			pstmt.setString(1, Transaction.getAmmountTransfered().toString());
-			pstmt.setString(2, Transaction.getAcctID().toString());
-			return pstmt.execute();
+			pstmt.setString(1, Transaction.getTs().toString());
+			pstmt.setString(2, Transaction.getAmmountTransfered().toString());
+			pstmt.setString(3, Transaction.getDestination());
+			pstmt.setString(4, Transaction.getAcctID().toString());
+			pstmt.execute();
+			return true;
 		} catch (SQLException e) {
 			System.out.println("Issue adding transaction to database");
 			e.printStackTrace();
