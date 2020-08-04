@@ -15,6 +15,8 @@ loginCredentials.txt
 
 # Package Files #
 *.jar
+#Dont ignore runnable jar
+!bankapp.jar
 *.war
 *.nar
 *.ear

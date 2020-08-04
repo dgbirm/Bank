@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2020 as part of Bank, All rights reserved.
- * @author Dan Birmingham. Please reach out to dgbirm@gmail.com
- * Date generated: Jul 29, 2020
- * @version jdk-14
- */
 package com.dollarsbank.localhostmysql;
 
 import java.sql.Connection;
@@ -44,7 +38,6 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 					 rs.getString("custCity"),
 					 rs.getString("custCountry"));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return c;
@@ -63,7 +56,6 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 					 rs.getString("custCity"),
 					 rs.getString("custCountry"));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return c;
@@ -80,7 +72,6 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 				custAcctIDs.add(rs.getInt("idAccount"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0==custAcctIDs.size() ? null : custAcctIDs;
@@ -88,11 +79,9 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 
 	@Override
 	public ResultSet getAllCustomers() {
-		// TODO Auto-generated method stub
 		try {
 			rs = stmt.executeQuery("SELECT * FROM customer");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rs;

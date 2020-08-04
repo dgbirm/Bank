@@ -10,11 +10,27 @@ import java.util.List;
 
 import com.dollarsbank.model.Transaction;
 
+
 /**
  * The Interface TransactionDAO.
  */
 public interface TransactionDAO {
+	
+	/**
+	 * Gets the transaction history.
+	 *
+	 * @param numOfTrans the num of trans
+	 * @param idAccount  the id account
+	 * @return the transaction history
+	 */
 	public List<Transaction> getTransactionHistory(Integer numOfTrans, Integer idAccount);
+	
+	/**
+	 * Adds the transaction.
+	 *
+	 * @param Transaction the transaction
+	 * @return true, if successful
+	 */
 	public boolean addTransaction(Transaction Transaction);
 	
 }

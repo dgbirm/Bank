@@ -22,7 +22,7 @@ public class OverdraftException extends Exception {
 	 */
 	private static String formatMessage(int accountID, double currentBalance) {
 		return String.format("Your transaction is unable to be completed %n"
-				+ " because you are not allowed to credit your this account. %n"
+				+ "because you are not allowed to credit your this account. %n"
 				+ "Your current balance for account %d is %.2f", accountID, currentBalance);	
 	}
 	

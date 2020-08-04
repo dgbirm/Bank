@@ -133,7 +133,6 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 				a.getAcctCustomerIDs().add(rs.getInt("idCustomer"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

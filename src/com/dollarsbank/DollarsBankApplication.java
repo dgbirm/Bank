@@ -27,7 +27,6 @@ public class DollarsBankApplication {
 	}
 	public static void main(String[] args) {
 		loginCredentials = CredentialsFileStorageUtil.readStateFromFile();
-		System.out.println("The current loginCredentials: \n" + loginCredentials + "\n");
 		try {
 			ConsoleGuiUtil.mainRunner();
 		} catch (InterruptedException e) {

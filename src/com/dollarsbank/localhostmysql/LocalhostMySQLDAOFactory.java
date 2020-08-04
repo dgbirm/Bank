@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020 as part of Bank, All rights reserved.
+ * @author Dan Birmingham. Please reach out to dgbirm@gmail.com
+ * Date generated: July 30, 2020
+ * @version jdk-14
+ */
 package com.dollarsbank.localhostmysql;
 // AwsMySQL concrete DAO Factory implementation
 
@@ -34,13 +40,11 @@ public class LocalhostMySQLDAOFactory extends DAOFactory {
 
 	@Override
 	public AccountDAO getAccountDAO() {
-		// TODO Auto-generated method stub
 		return new LocalhostMySQLAccountDAO();
 	}
 
 	@Override
 	public TransactionDAO getTransactionDAO() {
-		// TODO Auto-generated method stub
 		return new LocalhostMySQLTransactionDAO();
 	}
 }

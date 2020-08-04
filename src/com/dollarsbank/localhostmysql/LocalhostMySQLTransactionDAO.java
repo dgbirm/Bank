@@ -34,9 +34,7 @@ public class LocalhostMySQLTransactionDAO implements TransactionDAO {
 			rs = stmt.executeQuery(String.format("SELECT * FROM transaction WHERE idAccount=%d "
 					+ "ORDER BY idTransaction DESC", idAccount));
 			rs.beforeFirst();
-			System.out.println("hi im here");
 			while(rs.next() && counter < numOfTrans) {
-				System.out.println("inside while");
 				th.add(new Transaction(rs.getInt("idTransaction"),
 									   rs.getDouble("amountTransferred"),
 									   rs.getString("destination"),
@@ -46,7 +44,6 @@ public class LocalhostMySQLTransactionDAO implements TransactionDAO {
 			}
 			return th;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -54,7 +51,6 @@ public class LocalhostMySQLTransactionDAO implements TransactionDAO {
 
 	@Override
 	public boolean addTransaction(Transaction Transaction) {
-		// TODO Auto-generated method stub
 		String ps = "INSERT INTO transaction "
 				+ "(transactionTimestamp, amountTransferred, destination, idAccount) VALUES (?,?,?,?)";
 		try {

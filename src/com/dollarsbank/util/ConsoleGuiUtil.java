@@ -110,7 +110,7 @@ public class ConsoleGuiUtil {
 						throw new WeekPasswordException();
 					}
 				} catch (Exception e) {
-					e.getMessage();
+					System.out.println(e.getMessage());
 				}
 			}
 
@@ -232,7 +232,7 @@ public class ConsoleGuiUtil {
 	private static void newAccount(Scanner input, Integer customerID) {//logic could be a little cleaner here
 		//initial deposit amount
 		String accountType;
-		Double initialDeposit;
+		Double initialDeposit=0.00;
 		Set<Integer> usrSet = new HashSet<>();
 		usrSet.add(customerID);
 		Enum<AccountType> accntType=null;
@@ -240,57 +240,63 @@ public class ConsoleGuiUtil {
 		
 		System.out.println("Please enter the amount you \n"
 				+ "will initially deposit into your new account:");
-		initialDeposit = Double.parseDouble(input.nextLine());
-		//accnt type
-		for (int i = 0; i < 3; i++) {
-			System.out.println("What kind of account do you want?"
-					+ "\n c -> checking"
-					+ "\n s -> savings"
-					+ "\n b -> brokerage");
-			//TODO: This would be a little cleaner as a switch
-			accountType = input.nextLine();
-			if (accountType.equals("c")) {
-				accntType = AccountType.CHECKING;
-				break;
-			}
-			else if (accountType.equals("s")) {
-				accntType = AccountType.SAVINGS;
-				break;
-			}
-			else if (accountType.equals("b")) {
-				accntType = AccountType.BROKERAGE;
-				break;
-			}
-			else {
-				System.out.println("Please read the prompt and try again");
-			}
-		}
-		if(accntType == null) {
-			System.out.println("Too many bad inputs. Exiting ...");
-			return;
-		}
-		//send to db using DAO
-		a = new Account((Integer) null, usrSet, accntType, initialDeposit);
-		synchronized (aDAO) {
-			if(aDAO.addAccount(a)) {
-				// not safe for multiple access to db
-				a = aDAO.getMostRecentAccount();
-				if (aDAO.addCustomer_Account(customerID, a.getAcctID())) {
-					a = aDAO.getMostRecentAccount();
-					System.out.println(String.format("Congradulations! Your new Account ID is %d %n"
-							+ "please take note as you may need this in the future", a.getAcctID()));
+		
+		try {
+			initialDeposit = Double.parseDouble(input.nextLine());
+			//accnt type
+			for (int i = 0; i < 3; i++) {
+				System.out.println("What kind of account do you want?"
+						+ "\n c -> checking"
+						+ "\n s -> savings"
+						+ "\n b -> brokerage");
+				accountType = input.nextLine();
+				if (accountType.equals("c")) {
+					accntType = AccountType.CHECKING;
+					break;
+				}
+				else if (accountType.equals("s")) {
+					accntType = AccountType.SAVINGS;
+					break;
+				}
+				else if (accountType.equals("b")) {
+					accntType = AccountType.BROKERAGE;
+					break;
 				}
 				else {
-					aDAO.deleteAccount(a.getAcctID());
+					System.out.println("Please read the prompt and try again");
+				}
+			}
+			if(accntType == null) {
+				System.out.println("Too many bad inputs. Exiting ...");
+				return;
+			}
+			//send to db using DAO
+			a = new Account((Integer) null, usrSet, accntType, initialDeposit);
+			synchronized (aDAO) {
+				if(aDAO.addAccount(a)) {
+					// not safe for multiple access to db
+					a = aDAO.getMostRecentAccount();
+					if (aDAO.addCustomer_Account(customerID, a.getAcctID())) {
+						a = aDAO.getMostRecentAccount();
+						System.out.println(String.format("Congradulations! Your new Account ID is %d %n"
+								+ "please take note as you may need this in the future", a.getAcctID()));
+					}
+					else {
+						aDAO.deleteAccount(a.getAcctID());
+						System.out.println("Something went wrong connecting to the database. \n"
+								+ "No new account was created.");
+					}
+					
+				}
+				else {
 					System.out.println("Something went wrong connecting to the database. \n"
 							+ "No new account was created.");
 				}
-				
 			}
-			else {
-				System.out.println("Something went wrong connecting to the database. \n"
-						+ "No new account was created.");
-			}
+		} catch (NumberFormatException e) {
+			System.out.println("That is not a valid amount");
+		} catch (Exception e ) {
+			System.out.println("You have encountered an unknown error");
 		}
 	}
 	
@@ -365,11 +371,9 @@ public class ConsoleGuiUtil {
 				System.out.println("No transaction was executed");
 			}
 		} catch (IndexOutOfBoundsException e) {
-			// TODO Auto-generated catch block
 			System.out.println("You have not given a valid input. Please try again");
 		} catch (OverdraftException e) {
-			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -398,7 +402,6 @@ public class ConsoleGuiUtil {
 			List<Transaction> th = tDAO.getTransactionHistory(numOfTrans, acct);
 			th.forEach(t -> System.out.println(t));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("You have not given a valid input. Please try again");
 		}
@@ -422,7 +425,7 @@ public class ConsoleGuiUtil {
 						throw new WeekPasswordException();
 					}
 				} catch (Exception e) {
-					e.getMessage();
+					System.out.println(e.getMessage());
 				}
 			}
 

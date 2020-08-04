@@ -1,17 +1,15 @@
-/**
- * 
+/*
+ * Copyright (c) 2020 as part of Bank, All rights reserved.
+ * @author Dan Birmingham. Please reach out to dgbirm@gmail.com
+ * Date generated: July 29, 2020
+ * @version jdk-14
  */
+
 package com.dollarsbank;
 
 import com.dollarsbank.localhostmysql.LocalhostMySQLDAOFactory;
 
-/**
- * @author Dan Birmingham >> dgbirm@gmail.com
- * Start Date: Jun 18, 2020
- * Last Updated: 
- * Description:
- *
- */
+
 //Abstract class DAO Factory
 public abstract class DAOFactory {
 
