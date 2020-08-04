@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.dollarsbank.CustomerDAO;
 import com.dollarsbank.model.Customer;
@@ -34,7 +36,7 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 	public Customer getCustomer(Integer id) {
 		Customer c = null;
 		try {
-			rs= stmt.executeQuery("SELECT * FROM customer WHERE idCustomer=" + id);
+			rs= stmt.executeQuery("SELECT * FROM customer WHERE idCustomer=" + id.toString());
 			rs.first();
 			c = new Customer(rs.getInt("idCustomer"),
 					 rs.getString("custName"),
@@ -64,6 +66,23 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 			e.printStackTrace();
 		}
 		return c;
+	}
+	
+	@Override
+	public List<Integer> getCustomerAccounts(Integer idCustomer){
+		List<Integer> custAcctIDs = new ArrayList<>();
+		//get the account owners
+		try {
+			rs = stmt.executeQuery(String.format("SELECT * FROM customer_account WHERE idCustomer=%d", idCustomer));
+			rs.beforeFirst();
+			while(rs.next()) {
+				custAcctIDs.add(rs.getInt("idCustomer"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0==custAcctIDs.size() ? null : custAcctIDs;
 	}
 
 	@Override
@@ -104,7 +123,5 @@ public class LocalhostMySQLCustomerDAO implements CustomerDAO {
 	@Override
 	public void deleteCustomer(Customer Customer) {
 		// TODO Auto-generated method stub
-
 	}
-
 }

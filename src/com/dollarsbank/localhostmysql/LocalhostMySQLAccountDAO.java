@@ -27,9 +27,21 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 	}
 	
 	@Override
-	public Account getAccount() {
-		// TODO Auto-generated method stub
-		return null;
+	public Account getAccount(Integer idAccount) {
+		Account a = null;
+		try {
+			rs= stmt.executeQuery("SELECT * FROM account WHERE idCustomer=" + idAccount.toString());
+			rs.first();
+			a = new Account(rs.getInt("idAccount"),
+					new HashSet<Integer>(),
+					AccountType.valueOf(rs.getString("acctType")),
+					rs.getDouble("acctBalance"));
+			getAllCustomersOnAnAccount(a);
+		} catch (SQLException e) {
+			System.out.println("issue getting account from the db");
+			e.printStackTrace();
+		}
+		return a;
 	}
 
 	@Override
@@ -73,13 +85,7 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 					new HashSet<Integer>(),
 					AccountType.valueOf(rs.getString("acctType")),
 					rs.getDouble("acctBalance"));
-			//get the account owners
-			rs = stmt.executeQuery(String.format("SELECT * FROM customer_account WHERE idAccount=%d", a.getAcctID()));
-			rs.beforeFirst();
-			while(rs.next()) {
-				a.getAcctCustomerIDs().add(rs.getInt("idCustomer"));
-			}
-			
+			getAllCustomersOnAnAccount(a);
 		} catch (SQLException e) {
 			System.out.println("issue getting most recent account added to db");
 			e.printStackTrace();
@@ -93,10 +99,38 @@ public class LocalhostMySQLAccountDAO implements AccountDAO {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public boolean updateAccountBalance(Integer idAccount, Double depositAmount) {
+		String ps = "UPDATE account SET acctBalance=acctBalance+? where idAccount=?";
+		try {
+			pstmt = conn.prepareStatement(ps);
+			pstmt.setString(1, depositAmount.toString());
+			pstmt.setString(2, idAccount.toString());
+			return pstmt.execute();
+		} catch (SQLException e) {
+			System.out.println("Issue updateing balance ");
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	@Override
 	public void deleteAccount(Integer acctID) {
 		// TODO Auto-generated method stub
 
-	}	
+	}
+	private void getAllCustomersOnAnAccount(Account a) {
+		//get the account owners
+		try {
+			rs = stmt.executeQuery(String.format("SELECT * FROM customer_account WHERE idAccount=%d", a.getAcctID()));
+			rs.beforeFirst();
+			while(rs.next()) {
+				a.getAcctCustomerIDs().add(rs.getInt("idCustomer"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

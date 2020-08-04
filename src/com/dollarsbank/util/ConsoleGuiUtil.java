@@ -1,20 +1,17 @@
 package com.dollarsbank.util;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import com.dollarsbank.AccountDAO;
 import com.dollarsbank.CustomerDAO;
 import com.dollarsbank.DAOFactory;
 import com.dollarsbank.DollarsBankApplication;
 import com.dollarsbank.TransactionDAO;
+import com.dollarsbank.exceptions.OverdraftException;
 import com.dollarsbank.exceptions.WeekPasswordException;
 import com.dollarsbank.model.Account;
 import com.dollarsbank.model.AccountType;
@@ -137,7 +134,7 @@ public class ConsoleGuiUtil {
 				c = cDAO.getMostRecentCustomer();
 				
 				//add login credentials
-				DollarsBankApplication.addLoginCredenitals(c.getCustomerID(), pw);
+				DollarsBankApplication.addLoginCredentials(c.getCustomerID(), pw);
 				System.out.println(String.format("Congradulations! Your new Customer ID is %d %n"
 						+ "please take note as you will use this ID to login in the future", c.getCustomerID()));
 			}
@@ -190,21 +187,35 @@ public class ConsoleGuiUtil {
 			System.out.println("\n----- Welcome Back -----");
 			System.out.println("What would you like to do today?"
 					+ "\n i -> open a new bank account"
-					+ "\n ii -> make a deposit"
-					+ "\n iii -> make a withdrawl"
-					+ "\n iv -> transfer funds between accounts"
-					+ "\n v -> view recent transactions"
-					+ "\n vi -> display customer information"
-					+ "\n vii -> change password"
-					+ "\n q -> sign out");
+					+ "\n ii -> make a monitary transaction"
+					+ "\n iii -> transfer funds between accounts"
+					+ "\n iv -> view transaction history"
+					+ "\n v -> display customer information"
+					+ "\n vi -> change password"
+					+ "\n b -> sign out");
 			loggedInput = input.nextLine();
 			switch (loggedInput) {
 			case "i":
 				newAccount(input, customerID);
 				break;
 			case "ii":
-				
-			case "q":
+				makeTransaction(input, customerID);
+				break;
+			case "iii":
+				System.out.println("This functionality has not yet been implemented \n"
+						+ "Please try something else");
+				break;
+			case "iv":
+				getTransactionHistory(input, customerID);
+				break;
+			case "v":
+				System.out.println("Your customer information is as follows:");
+				System.out.println(cDAO.getCustomer(customerID).toString());
+				break;
+			case "vi":
+				updatePassword(input, customerID);
+				break;
+			case "b":
 				System.out.println("Logging out...");
 				break;
 			default:
@@ -214,7 +225,7 @@ public class ConsoleGuiUtil {
 		}
 	}
 	
-	private static void newAccount(Scanner input, Integer customerID) {
+	private static void newAccount(Scanner input, Integer customerID) {//logic could be a little cleaner here
 		//initial deposit amount
 		String accountType;
 		Double initialDeposit;
@@ -222,7 +233,6 @@ public class ConsoleGuiUtil {
 		usrSet.add(customerID);
 		Enum<AccountType> accntType=null;
 		Account a;
-		Transaction t;
 		
 		System.out.println("Please enter the amount you \n"
 				+ "will initially deposit into your new account:");
@@ -233,7 +243,7 @@ public class ConsoleGuiUtil {
 					+ "\n c -> checking"
 					+ "\n s -> savings"
 					+ "\n b -> brokerage");
-			
+			//TODO: This would be a little cleaner as a switch
 			accountType = input.nextLine();
 			if (accountType == "c") {
 				accntType = AccountType.CHECKING;
@@ -278,5 +288,150 @@ public class ConsoleGuiUtil {
 						+ "No new account was created.");
 			}
 		}
+	}
+	
+	private static void makeTransaction(Scanner input, Integer customerID) {
+		String transTypeInput;
+		String transType;
+		Integer acct;
+		Double depAmount;
+		Transaction t;
+		Double currentBalance;
+		
+		System.out.println("Ok! would you like to make a deposit or withdrawal? Type:"
+				+ "\n d for deposit"
+				+ "\n w for withrawal");
+		transTypeInput = input.nextLine().toLowerCase();
+		switch (transTypeInput) {
+		case "w": {
+			transType = "withdraw";
+			break;
+		}
+		case "d": {
+			transType = "deposit";
+			break;
+		}
+		default:
+			System.out.println("That was not a valid input. Please try again");
+			return;
+		}
+		System.out.println(String.format("Transaction type %s selected %n", transType));
+		
+		List<Integer> acctList = cDAO.getCustomerAccounts(customerID);
+		if(null==acctList) {
+			System.out.println("You have no accounts to deposit into at this time. \n"
+					+ "Please make an account before you make a transaction");
+			return;
+		}
+		System.out.println("Please select the account to deposit to or withdaw from \n");
+		for (Integer acctID : acctList) {
+			System.out.println(String.format("%d for account with id %d",
+					acctList.indexOf(acctID), acctID));
+		}
+		try {
+			acct = acctList.get(Integer.parseInt(input.nextLine()));
+			System.out.println(String.format("Ok %1$sing with account id %d %n"
+					+ "How much would you like to %1$s?", transType, acct));
+			depAmount = Double.parseDouble(input.nextLine());
+			
+			System.out.println(String.format("Are you sure you would like to %s %.2f %n"
+					+ "for account with id %d? [y/n]", transType, depAmount, acct));
+			if("y".equalsIgnoreCase(input.nextLine())) {
+				if ("w".equals(transTypeInput)) {
+					depAmount= 0.0 - depAmount; //make negative for withdrawal
+					currentBalance = aDAO.getAccount(acct).getAcctBalance();
+					if(currentBalance + depAmount < 0.00) {
+						throw new OverdraftException(acct, currentBalance);
+					}
+				}
+				t = new Transaction((Integer) null, depAmount, acct);
+				if (tDAO.addTransaction(t)) {
+					if (aDAO.updateAccountBalance(acct, depAmount)) {
+						System.out.println("Your transaction has been completed successfully!");
+						System.out.println(String.format("Your account information for account %d is now: %n"
+								+ "%s", acct, aDAO.getAccount(acct).toString()));
+						return;
+					}
+				}
+				System.out.println("Your transaction could not be completed successfully :( .\n "
+						+ "Please check your connection and try again");
+
+			}
+			else {
+				System.out.println("No transaction was executed");
+			}
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			System.out.println("You have not given a valid input. Please try again");
+		} catch (OverdraftException e) {
+			// TODO Auto-generated catch block
+			e.getMessage();
+		}
+	}
+	
+	private static void getTransactionHistory(Scanner input, Integer customerID) {
+		Integer acct;
+		Integer numOfTrans;
+		
+		List<Integer> acctList = cDAO.getCustomerAccounts(customerID);
+		if(null==acctList) {
+			System.out.println("You have no accounts at this time. \n"
+					+ "You must have an account before you can have a transaction history...");
+			return;
+		}
+		System.out.println("Please select the account of which you'd like a history:\n");
+		for (Integer acctID : acctList) {
+			System.out.println(String.format("%d for account with id %d",
+					acctList.indexOf(acctID), acctID));
+		}
+		try {
+			acct = acctList.get(Integer.parseInt(input.nextLine()));
+			System.out.println(String.format("Ok account id %d selected. %n"
+					+ "How many past transactions would you like to see", acct));
+			numOfTrans = Integer.getInteger(input.nextLine());
+			System.out.println();
+			System.out.println("---TRANSACTION HISTORY---");
+			List<Transaction> th = tDAO.getTransactionHistory(numOfTrans, acct);
+			th.forEach(t -> System.out.println(t));
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			System.out.println("You have not given a valid input. Please try again");
+		}
+	}
+	
+	private static void updatePassword(Scanner input, Integer customerID) {
+		boolean pwBad = true;
+		String pw = null;
+		String pw2;
+		// make a password
+		System.out.println("\nPlease chose a new password to log in with.\n" + "Your password must:\n"
+				+ "(a) use at least eight characters \n" + "(b) use at least one capital letter \n"
+				+ "(c) use at least 1 special character of the following: \n" + "\t @#$%^&+=");
+		while (true) {
+			while (pwBad) {
+				System.out.println("Enter your new password");
+				pw = input.nextLine();
+				pwBad = !isValidPassword(pw);
+				try {
+					if (pwBad) {
+						throw new WeekPasswordException();
+					}
+				} catch (Exception e) {
+					e.getMessage();
+				}
+			}
+
+			System.out.println("Please re-enter your new password");
+			pw2 = input.nextLine();
+
+			if (pw.equals(pw2)) {
+				break;
+			} else {
+				System.out.println("Your passwords dont match. Please try again");
+				pwBad = true;
+			}
+		}
+		DollarsBankApplication.addLoginCredentials(customerID, pw);
+		System.out.println("Your password has been updated successfully!");
 	}
 }

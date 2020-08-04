@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2020 as part of Bank, All rights reserved.
  * @author Dan Birmingham. Please reach out to dgbirm@gmail.com
- * Date generated: Jul 30, 2020
+ * Date generated: Aug 3, 2020
  * @version jdk-14
  */
 
 package com.dollarsbank;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import com.dollarsbank.model.Customer;
 
@@ -30,6 +31,14 @@ public interface CustomerDAO {
 	 * @return the most recent customer added to db
 	 */
 	public Customer getMostRecentCustomer();
+	
+	/**
+	 * Gets the customer accounts.
+	 *
+	 * @param idCustomer the id customer
+	 * @return the customer accounts
+	 */
+	List<Integer> getCustomerAccounts(Integer idCustomer);
 	
 	/**
 	 * Gets the all customers.
@@ -60,4 +69,5 @@ public interface CustomerDAO {
 	 * @param Customer the customer
 	 */
 	public void deleteCustomer(Customer Customer);
+
 }

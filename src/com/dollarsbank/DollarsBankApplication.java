@@ -7,8 +7,9 @@
 
 package com.dollarsbank;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import com.dollarsbank.util.*;
 
 /**
  * The Class DollarsBankApplication is the main "runner" class for this console-based
@@ -16,15 +17,23 @@ import java.util.Map;
  */
 public class DollarsBankApplication {
 	
-	private static Map<Integer, Integer> loginCredenitals = new HashMap<>();
+	private static Map<Integer, Integer> loginCredentials;
 
 	public static synchronized Integer getHashedPw(Integer id) {
-		return loginCredenitals.get(id);
+		return loginCredentials.get(id);
 	}
 
-	public static synchronized void addLoginCredenitals(Integer id, String pw) {
-		loginCredenitals.put(id, pw.hashCode());
+	public static synchronized void addLoginCredentials(Integer id, String pw) {
+		loginCredentials.put(id, pw.hashCode());
 	}
-	
-	
+	public static void main(String[] args) {
+		loginCredentials = CredentialsFileStorageUtil.readStateFromFile();
+		try {
+			ConsoleGuiUtil.mainRunner();
+		} catch (InterruptedException e) {
+			System.out.println("Syncronization failed");
+			e.printStackTrace();
+		}
+		CredentialsFileStorageUtil.writeStateToFile(loginCredentials);
+	}
 }

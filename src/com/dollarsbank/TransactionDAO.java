@@ -6,7 +6,7 @@
  */
 package com.dollarsbank;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 import com.dollarsbank.model.Transaction;
 
@@ -14,6 +14,7 @@ import com.dollarsbank.model.Transaction;
  * The Interface TransactionDAO.
  */
 public interface TransactionDAO {
-	public ResultSet getTransactionHistory(int numOfTrans);
+	public List<Transaction> getTransactionHistory(Integer numOfTrans, Integer idAccount);
 	public boolean addTransaction(Transaction Transaction);
+	
 }

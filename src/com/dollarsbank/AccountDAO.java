@@ -12,10 +12,11 @@ import com.dollarsbank.model.Account;
  * The Interface AccountDAO.
  */
 public interface AccountDAO {
-	public Account getAccount();
+	public Account getAccount(Integer idAccount);
 	public boolean addAccount(Account Account);
 	public boolean addCustomer_Account(Integer customerID, Integer acctID);
 	public Account getMostRecentAccount();
 	public boolean updateAccount(Account Account);
+	public boolean updateAccountBalance(Integer idAccount, Double depositAmount);
 	public void deleteAccount(Integer acctID);
 }

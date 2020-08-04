@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
  * The Class Transaction.
  */
 public class Transaction {
-	private final int transactionID;
-	private double ammountTransfered;
+	private final Integer transactionID;
+	private Double ammountTransfered;
 	private String destination="";
-	private int acctID;
+	private Integer acctID;
 	private Timestamp ts;
 	/**
 	 * @param transactionID
@@ -27,7 +27,7 @@ public class Transaction {
 	 */
 	
 	//Constructors
-	public Transaction(int transactionID, double ammountTransfered, String destination, int acctID, Timestamp ts) {
+	public Transaction(Integer transactionID, Double ammountTransfered, String destination, Integer acctID, Timestamp ts) {
 		this.transactionID = transactionID;
 		this.ammountTransfered = ammountTransfered;
 		this.destination = destination;
@@ -35,7 +35,7 @@ public class Transaction {
 		this.ts = ts;
 	}
 	
-	public Transaction(int transactionID, double ammountTransfered, String destination, int acctID) {
+	public Transaction(Integer transactionID, Double ammountTransfered, String destination, Integer acctID) {
 		this.transactionID = transactionID;
 		this.ammountTransfered = ammountTransfered;
 		this.destination = destination;
@@ -44,7 +44,7 @@ public class Transaction {
 	}
 	
 
-	public Transaction(int transactionID, double ammountTransfered, int acctID) {
+	public Transaction(Integer transactionID, Double ammountTransfered, Integer acctID) {
 		this.transactionID = transactionID;
 		this.ammountTransfered = ammountTransfered;
 		this.acctID = acctID;
@@ -60,11 +60,11 @@ public class Transaction {
 	
 	
 	//GetterSetters
-	public synchronized double getAmmountTransfered() {
+	public synchronized Double getAmmountTransfered() {
 		return ammountTransfered;
 	}
 
-	public synchronized void setAmmountTransfered(double ammountTransfered) {
+	public synchronized void setAmmountTransfered(Double ammountTransfered) {
 		this.ammountTransfered = ammountTransfered;
 	}
 
@@ -84,11 +84,11 @@ public class Transaction {
 		this.ts = ts;
 	}
 
-	public synchronized int getTransactionID() {
+	public synchronized Integer getTransactionID() {
 		return transactionID;
 	}
 
-	public synchronized int getAcctID() {
+	public synchronized Integer getAcctID() {
 		return acctID;
 	}
 	
