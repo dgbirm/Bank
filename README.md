@@ -48,6 +48,8 @@ cd /Directory/of/bankapp.jar
 java --enable-preview -jar bankapp.jar 
 ```
 
+If you choose to work with the raw project, make sure to add the appropriate JDBC driver to the `classpath`. I am using `mysql-connector-java-8.0.20.jar`.
+
 ## Still Under Construction
 
 ### Transfers between accounts
@@ -56,3 +58,7 @@ Customers should at some point be able to transfer funds from one account to ano
 This includes implementing support for databases other than MySQL in `DAOFactory.java` and also abstracting the connection credentials from `/Bank/src/com/dollarsbank/localhostmysql/LocalhostMySQLDAOFactory.java` to a `.properties` or `.yml` file
 ### More reliable credential storage
 If the application crashes, new login credentials may not be stored in the permanent `loginCredentials.txt` file. At some point, this should not be the case.
+
+### Cross platform `.classpath` support
+
+By default the classpath 
