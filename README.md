@@ -61,4 +61,4 @@ If the application crashes, new login credentials may not be stored in the perma
 
 ### Cross platform `.classpath` support
 
-By default the classpath 
+The `.classpath` is not included at this time due to cross-platform compatibility concerns
