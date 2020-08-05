@@ -16,7 +16,7 @@ import com.dollarsbank.util.*;
  */
 public class DollarsBankApplication {
 	
-	private static HashMap<Integer, Integer> loginCredentials;;
+	private static HashMap<Integer, Integer> loginCredentials;
 
 	public static synchronized Integer getHashedPw(Integer id) {
 		return loginCredentials.get(id);
@@ -27,13 +27,17 @@ public class DollarsBankApplication {
 	}
 	public static void main(String[] args) {
 		loginCredentials = CredentialsFileStorageUtil.readStateFromFile();
+		Runtime.getRuntime().addShutdownHook(new Thread()
+				{
+					public void run() {
+						CredentialsFileStorageUtil.writeStateToFile(loginCredentials);
+					}
+				});
 		try {
 			ConsoleGuiUtil.mainRunner();
 		} catch (InterruptedException e) {
 			System.out.println("Application failed");
 			e.printStackTrace();
-		} finally {
-			CredentialsFileStorageUtil.writeStateToFile(loginCredentials);
-		}
+		} 
 	}
 }
