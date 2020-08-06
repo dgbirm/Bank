@@ -24,6 +24,8 @@ public class DollarsBankApplication {
 
 	public static synchronized void addLoginCredentials(Integer id, String pw) {
 		loginCredentials.put(id, pw.hashCode());
+		//make sure permanent file storage is updated right after credential added
+		CredentialsFileStorageUtil.writeStateToFile(loginCredentials);
 	}
 	public static void main(String[] args) {
 		loginCredentials = CredentialsFileStorageUtil.readStateFromFile();

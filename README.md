@@ -55,9 +55,7 @@ If you choose to work with the raw project, make sure to add the appropriate JDB
 ### Transfers between accounts
 Customers should at some point be able to transfer funds from one account to another.
 ### Expanded relational database support
-This includes implementing support for databases other than MySQL in `DAOFactory.java` and also abstracting the connection credentials from `/Bank/src/com/dollarsbank/localhostmysql/LocalhostMySQLDAOFactory.java` to a `.properties` or `.yml` file
-### More reliable credential storage
-If the application crashes, new login credentials may not be stored in the permanent `loginCredentials.txt` file. At some point, this should not be the case.
+This includes implementing support for databases other than MySQL in `DAOFactory.java` and also abstracting the connection credentials from `/Bank/src/com/dollarsbank/localhostmysql/LocalhostMySQLDAOFactory.java` to a `.properties` or `.yml` file.
 
 ### Cross platform `.classpath` support
 
